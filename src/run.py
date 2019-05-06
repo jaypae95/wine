@@ -3,6 +3,7 @@ import os.path as op
 from src import analysis as an
 from src import prediction as pr
 
+
 def read_data(clr='white'):
     file_name = 'winequality-' + clr + '.csv'
     file_dir = op.abspath(op.join(op.pardir, 'datasets', file_name))
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     df = quality_processing(df)
 
     # data analysis
-    an.test()
+    an.data_analysis(df)
 
     # data prediction
-    pr.test()
+    # pr.test()
