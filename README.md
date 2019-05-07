@@ -8,3 +8,15 @@
 위혜린
 김도연
 ```
+
+## Analysis
+* __만족도가 높은 데이터에서 나타나는 특징 분석__
+  * 만족도가 중간 혹은 중간인 데이터와도 비교
+* __만족도가 높은 데이터에서 column들 간의 관계 분석__
+* __전체 만족도와 column들 분석__
+* __feature selection__
+
+## Prediction
+* __svm__
+* __cross validation__
+* __grid serach__
