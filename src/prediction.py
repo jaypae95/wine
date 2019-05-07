@@ -20,7 +20,7 @@ def get_optimal_hyper_parameters(x_train, y_train):
     }
     clf = SVC()
     # search best parameters with cross validation using grid search
-    gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy')
+    gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy', cv=5)
     gr.fit(x_train, y_train)
     print("//// ", gr.best_params_, "///// {0:.1f}%".format(gr.best_score_ * 100))
 
