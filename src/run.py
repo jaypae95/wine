@@ -38,4 +38,4 @@ if __name__ == "__main__":
     an.data_analysis(df)
 
     # data prediction
-    # pr.test()
+    pr.prediction(df)

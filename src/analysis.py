@@ -1,7 +1,5 @@
 def data_analysis(df):
-    test()
     high_quality = df[df['quality'] == 'high']
-    print(high_quality)
 
     # 1. 만족도가 높은 데이터에서 나타나는 특징 분석
     # 만족도가 high인 것만 뽑아서 ( df[df['quality']=='high']
@@ -28,6 +26,3 @@ def analysis_each_columns(df):
 def analysis_high_quality(df):
     print(1)
 
-
-def test():
-    print('an')
