@@ -43,10 +43,10 @@ def svm(x_train, y_train, x_test, y_test):
     clf.fit(x_train, y_train)
 
     pred = clf.score(x_train, y_train)
-    print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
+    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
 
     pred = clf.score(x_test, y_test)
-    print("<<Test Accuracy Rate: {0:.2f}%>>".format(pred * 100))
+    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
 
 
 def d_tree(x_train, y_train, x_test, y_test):
@@ -54,10 +54,10 @@ def d_tree(x_train, y_train, x_test, y_test):
     tree.fit(x_train, y_train)
 
     pred = tree.score(x_train, y_train)
-    print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
+    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
 
     pred = tree.score(x_test, y_test)
-    print("<<Test Accuracy Rate: {0:.2f}%>>".format(pred * 100))
+    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
 
 
 def knn(x_train, y_train, x_test, y_test):
@@ -65,11 +65,10 @@ def knn(x_train, y_train, x_test, y_test):
     neigh.fit(x_train, y_train)
 
     pred = neigh.score(x_train, y_train)
-    print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
+    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
 
     pred = neigh.score(x_test, y_test)
-    print("<<Test Accuracy Rate: {0:.2f}%>>"
-          .format(pred * 100))
+    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
 
 
 def seperate_features_and_label(train, test):
