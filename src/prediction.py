@@ -16,30 +16,30 @@ def get_optimal_hyper_parameters_for_svm(x_train, y_train):
     grid_param = {
         'kernel': ['linear', 'rbf'],
         'C': [0.1, 1, 10],
-        'gamma': ['auto', 0.1, 1, 10]
+        'gamma': ['auto', 0.01, 0.1, 1, 10]
     }
     clf = SVC()
     # search best parameters with cross validation using grid search
     gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy', cv=5)
     gr.fit(x_train, y_train)
 
-    print("\n\n<<Kernel Used: {} >>".format(gr.best_params_['kernel']))
-    print("<<C Used: {} >>".format(gr.best_params_['C']))
-    print("<<Gamma Used: {} >>".format(gr.best_params_['gamma']))
-    print("<<Best Accuracy for training: {0:.2f}% >>".format(gr.best_score_ * 100))
+    print("Kernel Used: {}".format(gr.best_params_['kernel']))
+    print("C Used: {}".format(gr.best_params_['C']))
+    print("Gamma Used: {}".format(gr.best_params_['gamma']))
+    print("Best Accuracy for training: {0:.2f}%".format(gr.best_score_ * 100))
 
     return gr.best_params_
 
 
 def svm(x_train, y_train, x_test, y_test):
-    # best_params = get_optimal_hyper_parameters_for_svm(x_train, y_train)
-    best_params = {
+    # params = get_optimal_hyper_parameters_for_svm(x_train, y_train)
+    params = {
         'kernel': 'linear',
         'C': 1,
         'gamma': 'auto'
     }
 
-    clf = SVC(kernel=best_params['kernel'], C=best_params['C'], gamma=best_params['gamma'])
+    clf = SVC(kernel=params['kernel'], C=params['C'], gamma=params['gamma'])
     clf.fit(x_train, y_train)
 
     pred = clf.score(x_train, y_train)
