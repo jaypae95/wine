@@ -12,7 +12,7 @@ def prediction(df):
     svm(x_train, y_train, x_test, y_test)
 
 
-def get_optimal_hyper_parameters(x_train, y_train):
+def get_optimal_hyper_parameters_for_svm(x_train, y_train):
     grid_param = {
         'kernel': ['linear', 'rbf'],
         'C': [0.1, 1, 10],
@@ -22,7 +22,6 @@ def get_optimal_hyper_parameters(x_train, y_train):
     # search best parameters with cross validation using grid search
     gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy', cv=5)
     gr.fit(x_train, y_train)
-    print("//// ", gr.best_params_, "///// {0:.1f}%".format(gr.best_score_ * 100))
 
     print("\n\n<<Kernel Used: {} >>".format(gr.best_params_['kernel']))
     print("<<C Used: {} >>".format(gr.best_params_['C']))
@@ -33,7 +32,7 @@ def get_optimal_hyper_parameters(x_train, y_train):
 
 
 def svm(x_train, y_train, x_test, y_test):
-    # best_params = get_optimal_hyper_parameters(x_train, y_train)
+    # best_params = get_optimal_hyper_parameters_for_svm(x_train, y_train)
     best_params = {
         'kernel': 'linear',
         'C': 1,
@@ -42,38 +41,33 @@ def svm(x_train, y_train, x_test, y_test):
 
     clf = SVC(kernel=best_params['kernel'], C=best_params['C'], gamma=best_params['gamma'])
     clf.fit(x_train, y_train)
+
     pred = clf.score(x_train, y_train)
-    print("<<Train Accuracy Rate: {0:.2f}%>>"
-          .format(pred * 100))
+    print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
 
     pred = clf.score(x_test, y_test)
-
-    print("<<Test Accuracy Rate: {0:.2f}%>>"
-          .format(pred * 100))
+    print("<<Test Accuracy Rate: {0:.2f}%>>".format(pred * 100))
 
 
 def d_tree(x_train, y_train, x_test, y_test):
     tree = DecisionTreeClassifier(random_state=1)
     tree.fit(x_train, y_train)
-    pred = tree.score(x_train, y_train)
 
+    pred = tree.score(x_train, y_train)
     print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
 
     pred = tree.score(x_test, y_test)
-
     print("<<Test Accuracy Rate: {0:.2f}%>>".format(pred * 100))
 
 
 def knn(x_train, y_train, x_test, y_test):
     neigh = KNeighborsClassifier(n_neighbors=5)
     neigh.fit(x_train, y_train)
-    pred = neigh.score(x_train, y_train)
 
-    print("<<Train Accuracy Rate: {0:.2f}%>>"
-          .format(pred * 100))
+    pred = neigh.score(x_train, y_train)
+    print("<<Train Accuracy Rate: {0:.2f}%>>".format(pred * 100))
 
     pred = neigh.score(x_test, y_test)
-
     print("<<Test Accuracy Rate: {0:.2f}%>>"
           .format(pred * 100))
 
