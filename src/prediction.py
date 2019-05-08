@@ -50,34 +50,6 @@ def prediction(df):
     logistic_regression(x_train, y_train, x_test, y_test)
 
 
-def get_optimal_hyper_parameters(x_train, y_train, classification):
-    if classification == 'knn':
-        grid_param = knn_params
-        clf = KNeighborsClassifier()
-    elif classification == 'dt':
-        grid_param = decision_tree_params
-        clf = DecisionTreeClassifier()
-    elif classification == 'svm':
-        grid_param = svm_params
-        clf = SVC()
-    elif classification == 'rf':
-        grid_param = random_forest_params
-        clf = RandomForestClassifier()
-    elif classification == 'lr':
-        grid_param = logistic_regression_params
-        clf = LogisticRegression()
-    else:
-        print('Wrong Classification')
-
-    gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy', cv=5, n_jobs=-1)
-    gr.fit(x_train, y_train)
-
-    print(gr.best_params_)
-    print("Best Accuracy for training: {0:.2f}%\n".format(gr.best_score_ * 100))
-
-    return gr.best_params_
-
-
 def logistic_regression(x_train, y_train, x_test, y_test):
     print('\n\nlogistic regression')
     # params = get_optimal_hyper_parameters(x_train, y_train, 'lr')
@@ -129,7 +101,7 @@ def decision_tree(x_train, y_train, x_test, y_test):
 
 def knn(x_train, y_train, x_test, y_test):
     print('\n\nknn')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
+    params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
     params = {
         'metric': 'manhattan',
         'n_neighbors': 5,
@@ -137,20 +109,6 @@ def knn(x_train, y_train, x_test, y_test):
     }
     neigh = KNeighborsClassifier(**params)
     training_and_test(neigh, x_train, y_train, x_test, y_test)
-
-
-def training_and_test(clf, x_train, y_train, x_test, y_test):
-    clf.fit(x_train, y_train)
-
-    pred = clf.score(x_train, y_train)
-    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
-
-    pred = clf.score(x_test, y_test)
-    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
-
-    y_pred = clf.predict(x_test)
-    cm = confusion_matrix(y_test, y_pred)
-    print(cm)
 
 
 def seperate_features_and_label(train, test):
@@ -171,3 +129,46 @@ def seperate_train_and_test_data(df):
     print(len(test[test['quality'] == 'low']))
 
     return train, test
+
+
+def training_and_test(clf, x_train, y_train, x_test, y_test):
+    clf.fit(x_train, y_train)
+
+    pred = clf.score(x_train, y_train)
+    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
+
+    pred = clf.score(x_test, y_test)
+    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
+
+    y_pred = clf.predict(x_test)
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+
+
+def get_optimal_hyper_parameters(x_train, y_train, classification):
+    if classification == 'knn':
+        grid_param = knn_params
+        clf = KNeighborsClassifier()
+    elif classification == 'dt':
+        grid_param = decision_tree_params
+        clf = DecisionTreeClassifier()
+    elif classification == 'svm':
+        grid_param = svm_params
+        clf = SVC()
+    elif classification == 'rf':
+        grid_param = random_forest_params
+        clf = RandomForestClassifier()
+    elif classification == 'lr':
+        grid_param = logistic_regression_params
+        clf = LogisticRegression()
+    else:
+        print('Wrong Classification')
+        exit()
+
+    gr = GridSearchCV(estimator=clf, param_grid=grid_param, scoring='accuracy', cv=5, n_jobs=-1)
+    gr.fit(x_train, y_train)
+
+    print(gr.best_params_)
+    print("Best Accuracy for training: {0:.2f}%\n".format(gr.best_score_ * 100))
+
+    return gr.best_params_
