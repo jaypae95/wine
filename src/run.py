@@ -15,17 +15,18 @@ def read_data(clr='white'):
 
 
 def quality_processing(df):
+    df = df[df['quality'] != 6]
+
     high = [7, 8, 9, 10]
-    mid = 6
     low = [0, 1, 2, 3, 4, 5]
 
     quality = df['quality']
 
     quality = quality.replace(high, 'high')
-    quality = quality.replace(mid, 'mid')
     quality = quality.replace(low, 'low')
 
     df['quality'] = quality
+    df = df.reset_index(drop=True)
 
     return df
 
