@@ -5,11 +5,7 @@ import seaborn as sns
 
 
 def data_analysis(df):
-    high_quality = df[df['quality'] == 'high']
-
     # 1. 만족도가 높은 데이터에서 나타나는 특징 분석
-    # 만족도가 high인 것만 뽑아서 각 column들 하나 하나 분석
-    # low data에서도 비슷한 결과가 나오는 지 파악해야 하기 때문에 low데이터와도 비교
     analysis_each_column(df)
 
     # 2. 만족도가 높은 데이터에서 column들 간의 관계 분석
@@ -19,7 +15,17 @@ def data_analysis(df):
     # 3. 전체 만족도와 column들 분석
     analysis_columns_by_correlation(df)
 
-    # 4. PCA
+    # 4. 불필요한 column 제거
+    df = remove_some_columns(df)
+
+    return df
+
+
+def remove_some_columns(df):
+    df = df.drop('free sulfur dioxide', axis=1)
+    df = df.drop('density', axis=1)
+
+    return df
 
 
 def analysis_each_column(df):

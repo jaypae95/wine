@@ -5,9 +5,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 import numpy as np
-import warnings
-warnings.filterwarnings("ignore", category=FutureWarning)
+
 
 knn_params = {
     'n_neighbors': [3, 5, 7],
@@ -41,24 +41,52 @@ logistic_regression_params = {
 
 
 def prediction(df):
+
     train, test = seperate_train_and_test_data(df)
     x_train, y_train, x_test, y_test = seperate_features_and_label(train, test)
-    knn(x_train, y_train, x_test, y_test)
-    decision_tree(x_train, y_train, x_test, y_test)
-    svm(x_train, y_train, x_test, y_test)
-    random_forest(x_train, y_train, x_test, y_test)
-    logistic_regression(x_train, y_train, x_test, y_test)
+
+    pred = dict()
+    pred['knn'] = knn(x_train, y_train, x_test, y_test)
+    pred['dt'] = decision_tree(x_train, y_train, x_test, y_test)
+    pred['svm'] = svm(x_train, y_train, x_test, y_test)
+    pred['rf'] = random_forest(x_train, y_train, x_test, y_test)
+    pred['lr'] = logistic_regression(x_train, y_train, x_test, y_test)
+
+    plot_accuracy(pred)
+
+
+def plot_accuracy(pred):
+    plt.figure(figsize=(10, 10))
+    bottom = [
+        'knn', 'dt', 'svm', 'rf', 'lr'
+    ]
+
+    train = [acc['train'] for _, acc in pred.items()]
+    test = [acc['test'] for _, acc in pred.items()]
+
+    plt.plot(bottom, train, '--s', label="train")
+    plt.plot(bottom, test, '--s', label="test")
+
+    plt.xlabel('Model')
+    plt.ylabel('Accuracy')
+
+    plt.title('Accuracy Plot')
+    plt.legend()
+    plt.grid()
+    plt.show()
 
 
 def logistic_regression(x_train, y_train, x_test, y_test):
     print('\n\nlogistic regression')
     # params = get_optimal_hyper_parameters(x_train, y_train, 'lr')
     params = {
-        'C': 464.15888336127773,
+        'C': 10000.0,
         'penalty': 'l2'
     }
     log_clf = LogisticRegression(**params)
-    training_and_test(log_clf, x_train, y_train, x_test, y_test)
+    pred = training_and_test(log_clf, x_train, y_train, x_test, y_test)
+
+    return pred
 
 
 def random_forest(x_train, y_train, x_test, y_test):
@@ -70,22 +98,26 @@ def random_forest(x_train, y_train, x_test, y_test):
         'min_samples_leaf': 3,
         'min_samples_split': 8,
         'n_estimators': 200,
-        'random_state': 100
+        'random_state': 1
     }
     rf = RandomForestClassifier(**params)
-    training_and_test(rf, x_train, y_train, x_test, y_test)
+    pred = training_and_test(rf, x_train, y_train, x_test, y_test)
+
+    return pred
 
 
 def svm(x_train, y_train, x_test, y_test):
     print('\n\nsvm')
-    # params = get_optimal_hyper_parameters(x_train, y_train, svm)
+    # params = get_optimal_hyper_parameters(x_train, y_train, 'svm')
     params = {
-        'kernel': 'linear',
-        'C': 10,
-        'gamma': 'auto'
+        'C': 1,
+        'gamma': 'auto',
+        'kernel': 'linear'
     }
     clf = SVC(**params)
-    training_and_test(clf, x_train, y_train, x_test, y_test)
+    pred = training_and_test(clf, x_train, y_train, x_test, y_test)
+
+    return pred
 
 
 def decision_tree(x_train, y_train, x_test, y_test):
@@ -96,19 +128,23 @@ def decision_tree(x_train, y_train, x_test, y_test):
         'min_samples_split': 8
     }
     tree = DecisionTreeClassifier(**params)
-    training_and_test(tree, x_train, y_train, x_test, y_test)
+    pred = training_and_test(tree, x_train, y_train, x_test, y_test)
+
+    return pred
 
 
 def knn(x_train, y_train, x_test, y_test):
     print('\n\nknn')
-    params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
+    # params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
     params = {
-        'metric': 'manhattan',
-        'n_neighbors': 5,
+        'metric': 'euclidean',
+        'n_neighbors': 7,
         'weights': 'distance'
     }
     neigh = KNeighborsClassifier(**params)
-    training_and_test(neigh, x_train, y_train, x_test, y_test)
+    pred = training_and_test(neigh, x_train, y_train, x_test, y_test)
+
+    return pred
 
 
 def seperate_features_and_label(train, test):
@@ -134,15 +170,19 @@ def seperate_train_and_test_data(df):
 def training_and_test(clf, x_train, y_train, x_test, y_test):
     clf.fit(x_train, y_train)
 
-    pred = clf.score(x_train, y_train)
-    print("Train Accuracy Rate: {0:.2f}%".format(pred * 100))
+    pred = dict()
 
-    pred = clf.score(x_test, y_test)
-    print("Test Accuracy Rate: {0:.2f}%".format(pred * 100))
+    pred['train'] = clf.score(x_train, y_train)
+    print("Train Accuracy Rate: {0:.2f}%".format(pred['train'] * 100))
+
+    pred['test'] = clf.score(x_test, y_test)
+    print("Test Accuracy Rate: {0:.2f}%".format(pred['test'] * 100))
 
     y_pred = clf.predict(x_test)
     cm = confusion_matrix(y_test, y_pred)
     print(cm)
+
+    return pred
 
 
 def get_optimal_hyper_parameters(x_train, y_train, classification):

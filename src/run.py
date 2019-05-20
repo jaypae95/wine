@@ -36,7 +36,7 @@ if __name__ == "__main__":
     df = quality_processing(df)
 
     # data analysis
-    an.data_analysis(df)
+    df = an.data_analysis(df)
 
     # data prediction
-    # pr.prediction(df)
+    pr.prediction(df)
