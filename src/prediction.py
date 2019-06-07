@@ -3,11 +3,13 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
 
+# from sklearn.feature_selection import RFE
 
 knn_params = {
     'n_neighbors': [3, 5, 7],
@@ -41,8 +43,8 @@ logistic_regression_params = {
 
 
 def prediction(df):
-
     train, test = seperate_train_and_test_data(df)
+    # forward_selection(train, test)
     x_train, y_train, x_test, y_test = seperate_features_and_label(train, test)
 
     pred = dict()
@@ -64,7 +66,7 @@ def plot_accuracy(pred):
     train = [acc['train'] for _, acc in pred.items()]
     test = [acc['test'] for _, acc in pred.items()]
 
-    plt.plot(bottom, train, '--s', label="train")
+    # plt.plot(bottom, train, '--s', label="train")
     plt.plot(bottom, test, '--s', label="test")
 
     plt.xlabel('Model')
@@ -78,11 +80,11 @@ def plot_accuracy(pred):
 
 def logistic_regression(x_train, y_train, x_test, y_test):
     print('\n\nlogistic regression')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'lr')
-    params = {
-        'C': 10000.0,
-        'penalty': 'l2'
-    }
+    params = get_optimal_hyper_parameters(x_train, y_train, 'lr')
+    # params = {
+    #     'C': 10000.0,
+    #     'penalty': 'l2'
+    # }
     log_clf = LogisticRegression(**params)
     pred = training_and_test(log_clf, x_train, y_train, x_test, y_test)
 
@@ -91,15 +93,15 @@ def logistic_regression(x_train, y_train, x_test, y_test):
 
 def random_forest(x_train, y_train, x_test, y_test):
     print('\n\nrandom forest')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'rf')
-    params = {
-        'max_depth': 80,
-        'max_features': 3,
-        'min_samples_leaf': 3,
-        'min_samples_split': 8,
-        'n_estimators': 200,
-        'random_state': 1
-    }
+    params = get_optimal_hyper_parameters(x_train, y_train, 'rf')
+    # params = {
+    #     'max_depth': 80,
+    #     'max_features': 3,
+    #     'min_samples_leaf': 3,
+    #     'min_samples_split': 8,
+    #     'n_estimators': 200,
+    #     'random_state': 1
+    # }
     rf = RandomForestClassifier(**params)
     pred = training_and_test(rf, x_train, y_train, x_test, y_test)
 
@@ -108,12 +110,12 @@ def random_forest(x_train, y_train, x_test, y_test):
 
 def svm(x_train, y_train, x_test, y_test):
     print('\n\nsvm')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'svm')
-    params = {
-        'C': 1,
-        'gamma': 'auto',
-        'kernel': 'linear'
-    }
+    params = get_optimal_hyper_parameters(x_train, y_train, 'svm')
+    # params = {
+    #     'C': 1,
+    #     'gamma': 'auto',
+    #     'kernel': 'linear'
+    # }
     clf = SVC(**params)
     pred = training_and_test(clf, x_train, y_train, x_test, y_test)
 
@@ -122,11 +124,11 @@ def svm(x_train, y_train, x_test, y_test):
 
 def decision_tree(x_train, y_train, x_test, y_test):
     print('\n\ndecision_tree')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'dt')
-    params = {
-        'max_depth': 5,
-        'min_samples_split': 8
-    }
+    params = get_optimal_hyper_parameters(x_train, y_train, 'dt')
+    # params = {
+    #     'max_depth': 5,
+    #     'min_samples_split': 8
+    # }
     tree = DecisionTreeClassifier(**params)
     pred = training_and_test(tree, x_train, y_train, x_test, y_test)
 
@@ -135,12 +137,12 @@ def decision_tree(x_train, y_train, x_test, y_test):
 
 def knn(x_train, y_train, x_test, y_test):
     print('\n\nknn')
-    # params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
-    params = {
-        'metric': 'euclidean',
-        'n_neighbors': 7,
-        'weights': 'distance'
-    }
+    params = get_optimal_hyper_parameters(x_train, y_train, 'knn')
+    # params = {
+    #     'metric': 'euclidean',
+    #     'n_neighbors': 7,
+    #     'weights': 'distance'
+    # }
     neigh = KNeighborsClassifier(**params)
     pred = training_and_test(neigh, x_train, y_train, x_test, y_test)
 
