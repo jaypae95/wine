@@ -17,6 +17,6 @@
 * __feature selection__
 
 ## Prediction
-* __svm__
+* __knn, decision tree, svm, random forest, logistic regression__
 * __cross validation__
 * __grid serach__
